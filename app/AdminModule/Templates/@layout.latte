@@ -8,17 +8,32 @@
 </head>
 <body class="admin-shell">
     <aside class="admin-nav">
-        <strong>CMS</strong>
-        <div class="admin-user">
-            <span>Přihlášen</span>
-            <strong>{$currentUserName}</strong>
-            <small n:if="$currentUserEmail">{$currentUserEmail}</small>
-            <small>{implode(', ', $currentUserRoles)}</small>
+        <strong class="admin-brand">
+            <span class="nav-icon nav-icon-brand" aria-hidden="true"></span>
+            <span class="admin-brand__label">CMS</span>
+        </strong>
+        <div class="admin-user" data-tooltip="{$currentUserName}" title="{$currentUserName}">
+            <span class="nav-icon nav-icon-user" aria-hidden="true"></span>
+            <div class="admin-user__text">
+                <span>Přihlášen</span>
+                <strong>{$currentUserName}</strong>
+                <small n:if="$currentUserEmail">{$currentUserEmail}</small>
+                <small>{implode(', ', $currentUserRoles)}</small>
+            </div>
         </div>
         <nav>
-            <a n:href=":Front:Homepage:default" class="admin-nav-external">Zobrazit web</a>
-            <a n:foreach="$adminMenu as $link => $label" n:href="$link">{$label}</a>
-            <a n:href="Sign:out">Odhlásit</a>
+            <a n:href=":Front:Homepage:default" class="admin-nav-link admin-nav-external" data-tooltip="Zobrazit web" aria-label="Zobrazit web" title="Zobrazit web">
+                <span class="nav-icon nav-icon-web" aria-hidden="true"></span>
+                <span class="admin-nav-label">Zobrazit web</span>
+            </a>
+            <a n:foreach="$adminMenu as $item" n:href="$item['link']" class="admin-nav-link" data-tooltip="{$item['label']}" aria-label="{$item['label']}" title="{$item['label']}">
+                <span class="nav-icon nav-icon-{$item['icon']}" aria-hidden="true"></span>
+                <span class="admin-nav-label">{$item['label']}</span>
+            </a>
+            <a n:href="Sign:out" class="admin-nav-link" data-tooltip="Odhlásit" aria-label="Odhlásit" title="Odhlásit">
+                <span class="nav-icon nav-icon-logout" aria-hidden="true"></span>
+                <span class="admin-nav-label">Odhlásit</span>
+            </a>
         </nav>
     </aside>
     <main class="admin-main">

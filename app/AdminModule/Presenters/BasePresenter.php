@@ -39,17 +39,17 @@ abstract class BasePresenter extends Presenter
         parent::beforeRender();
         $this->template->vite = $this->vite;
         $this->template->adminMenu = [
-            'Dashboard:default' => 'Přehled',
-            'Settings:default' => 'Nastavení',
-            'Galleries:default' => 'Galerie',
-            'Content:default' => 'Obsah',
-            'Products:default' => 'Produkty',
-            'Pricing:default' => 'Ceník',
-            'OpeningHours:default' => 'Otevírací doba',
-            'Rooms:default' => 'Místnosti',
-            'Trainings:default' => 'Tréninky',
-            'Users:default' => 'Uživatelé',
-            'Menu:default' => 'Menu',
+            ['link' => 'Dashboard:default', 'label' => 'Přehled', 'icon' => 'dashboard'],
+            ['link' => 'Settings:default', 'label' => 'Nastavení', 'icon' => 'settings'],
+            ['link' => 'Galleries:default', 'label' => 'Galerie', 'icon' => 'gallery'],
+            ['link' => 'Content:default', 'label' => 'Obsah', 'icon' => 'content'],
+            ['link' => 'Products:default', 'label' => 'Produkty', 'icon' => 'products'],
+            ['link' => 'Pricing:default', 'label' => 'Ceník', 'icon' => 'pricing'],
+            ['link' => 'OpeningHours:default', 'label' => 'Otevírací doba', 'icon' => 'clock'],
+            ['link' => 'Rooms:default', 'label' => 'Místnosti', 'icon' => 'rooms'],
+            ['link' => 'Trainings:default', 'label' => 'Tréninky', 'icon' => 'trainings'],
+            ['link' => 'Users:default', 'label' => 'Uživatelé', 'icon' => 'users'],
+            ['link' => 'Menu:default', 'label' => 'Menu', 'icon' => 'menu'],
         ];
         $identity = $this->securityUser->getIdentity();
         $this->template->currentUser = $identity;
