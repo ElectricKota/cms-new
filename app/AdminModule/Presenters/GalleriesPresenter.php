@@ -43,16 +43,63 @@ final class GalleriesPresenter extends BasePresenter
         $this->redirect('default');
     }
 
-    /** @return list<array{id:int,galleryTitle:string,assetId:int,assetName:string,assetAlt:string|null}> */
+    public function actionMoveItem(int $id, string $direction): void
+    {
+        $item = $this->gateway->find('gallery_items', $id);
+        if ($item === null || !in_array($direction, ['up', 'down'], true)) {
+            $this->redirect('default');
+        }
+
+        $items = $this->gateway->table('gallery_items')
+            ->where('gallery_id', $item['gallery_id'])
+            ->order('position, id')
+            ->fetchAll();
+
+        foreach ($items as $index => $row) {
+            $row->update(['position' => ($index + 1) * 10]);
+        }
+
+        $ids = array_map(static fn ($row): int => (int) $row['id'], $items);
+        $currentIndex = array_search((int) $id, $ids, true);
+        if ($currentIndex === false) {
+            $this->redirect('default');
+        }
+
+        $targetIndex = $direction === 'up' ? $currentIndex - 1 : $currentIndex + 1;
+        if (!isset($items[$targetIndex])) {
+            $this->redirect('default');
+        }
+
+        $current = $items[$currentIndex];
+        $target = $items[$targetIndex];
+        $currentPosition = $current['position'];
+        $current->update(['position' => $target['position']]);
+        $target->update(['position' => $currentPosition]);
+        $this->redirect('default');
+    }
+
+    /** @return list<array{id:int,galleryTitle:string,assetId:int,assetName:string,assetAlt:string|null,isFirst:bool,isLast:bool}> */
     private function galleryItems(): array
     {
         $items = [];
-        foreach ($this->gateway->table('gallery_items')->order('gallery.title, position, id') as $item) {
+        $rows = $this->gateway->table('gallery_items')->order('gallery.title, position, id')->fetchAll();
+        $counts = [];
+
+        foreach ($rows as $row) {
+            $galleryId = (int) $row['gallery_id'];
+            $counts[$galleryId] = ($counts[$galleryId] ?? 0) + 1;
+        }
+
+        $positions = [];
+        foreach ($rows as $item) {
             $gallery = $item->ref('galleries', 'gallery_id');
             $asset = $item->ref('media_assets', 'media_asset_id');
             if ($gallery === null || $asset === null) {
                 continue;
             }
+
+            $galleryId = (int) $item['gallery_id'];
+            $positions[$galleryId] = ($positions[$galleryId] ?? 0) + 1;
 
             $items[] = [
                 'id' => (int) $item['id'],
@@ -60,6 +107,8 @@ final class GalleriesPresenter extends BasePresenter
                 'assetId' => (int) $asset['id'],
                 'assetName' => (string) $asset['original_name'],
                 'assetAlt' => $asset['alt'] !== null ? (string) $asset['alt'] : null,
+                'isFirst' => $positions[$galleryId] === 1,
+                'isLast' => $positions[$galleryId] === $counts[$galleryId],
             ];
         }
 

@@ -45,6 +45,7 @@ application.register('tinymce', class extends Controller {
       content_style: 'body{font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.55;color:#161a1d}',
       plugins: 'link lists table code',
       toolbar: 'undo redo | blocks | bold italic | bullist numlist | link table | code',
+      license_key: 'gpl',
       promotion: false,
       branding: false
     })
@@ -54,5 +55,58 @@ application.register('tinymce', class extends Controller {
     tinymce.remove(this.element)
   }
 })
+
+const deleteDialog = document.querySelector('[data-delete-dialog]')
+
+if (deleteDialog instanceof HTMLDialogElement) {
+  const confirmButton = deleteDialog.querySelector('[data-delete-dialog-confirm]')
+  const cancelButton = deleteDialog.querySelector('[data-delete-dialog-cancel]')
+  const message = deleteDialog.querySelector('[data-delete-dialog-message]')
+  let deleteHref = null
+
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) {
+      return
+    }
+
+    const trigger = event.target.closest('[data-confirm-delete]')
+    if (!(trigger instanceof HTMLAnchorElement)) {
+      return
+    }
+
+    event.preventDefault()
+    deleteHref = trigger.href
+
+    if (message !== null) {
+      message.textContent = trigger.dataset.confirmDelete || 'Opravdu chcete položku smazat?'
+    }
+
+    if (!deleteDialog.open) {
+      deleteDialog.showModal()
+    }
+  })
+
+  cancelButton?.addEventListener('click', () => {
+    deleteHref = null
+    deleteDialog.close()
+  })
+
+  confirmButton?.addEventListener('click', () => {
+    if (deleteHref !== null) {
+      window.location.href = deleteHref
+    }
+  })
+
+  deleteDialog.addEventListener('click', (event) => {
+    if (event.target === deleteDialog) {
+      deleteHref = null
+      deleteDialog.close()
+    }
+  })
+
+  deleteDialog.addEventListener('close', () => {
+    deleteHref = null
+  })
+}
 
 Nette.initOnLoad()

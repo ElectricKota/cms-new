@@ -109,8 +109,23 @@ body {
   padding: clamp(1rem, 4vw, 3rem);
 }
 
+.admin-main h1 {
+  margin: 0 0 1.25rem;
+  color: #0f172a;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.admin-main h2 {
+  margin: 1.5rem 0 .6rem;
+  color: #0f172a;
+  font-size: 1.35rem;
+  font-weight: 750;
+}
+
 .admin-section {
-  margin-block: 1rem;
+  margin-block: 1.25rem;
 }
 
 form,
@@ -187,6 +202,89 @@ input[type='submit'],
 
 .actions a:last-child {
   background: var(--danger);
+}
+
+.icon-actions {
+  align-items: center;
+  margin: .75rem 0 0;
+}
+
+.icon-actions .icon-button {
+  width: 2.35rem;
+  min-width: 2.35rem;
+  padding: 0;
+  font-size: 1.25rem;
+}
+
+.icon-actions .icon-button:not(.danger) {
+  background: #475569;
+}
+
+.icon-actions .icon-button.is-disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  border-radius: 6px;
+  color: #94a3b8;
+  background: #e2e8f0;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.trash-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4h8v2'/%3E%3Cpath d='M19 6l-1 14H6L5 6'/%3E%3Cpath d='M10 11v5'/%3E%3Cpath d='M14 11v5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.button-muted {
+  color: var(--ink);
+  background: #e2e8f0;
+}
+
+.button-danger {
+  background: var(--danger);
+}
+
+.confirm-dialog {
+  width: min(92vw, 28rem);
+  border: 0;
+  border-radius: 10px;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+}
+
+.confirm-dialog::backdrop {
+  background: rgb(15 23 42 / 58%);
+}
+
+.confirm-dialog__panel {
+  max-width: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 24px 64px rgb(15 23 42 / 28%);
+}
+
+.confirm-dialog__panel h2 {
+  margin: 0 0 .5rem;
+  font-size: 1.35rem;
+}
+
+.confirm-dialog__panel p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .65rem;
+  margin-top: 1rem;
 }
 
 .flash,

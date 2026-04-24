@@ -25,5 +25,15 @@
         <div n:foreach="$flashes as $flash" class="flash">{$flash->message}</div>
         {include content}
     </main>
+    <dialog class="confirm-dialog" data-delete-dialog>
+        <form method="dialog" class="confirm-dialog__panel">
+            <h2>Smazat fotku?</h2>
+            <p data-delete-dialog-message>Opravdu chcete fotku smazat?</p>
+            <div class="confirm-dialog__actions">
+                <button type="button" class="button button-muted" data-delete-dialog-cancel>Ne</button>
+                <button type="button" class="button button-danger" data-delete-dialog-confirm>Ano</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>

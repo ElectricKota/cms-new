@@ -157,12 +157,14 @@ CREATE TABLE IF NOT EXISTS trainings (
     trainer_user_id INT UNSIGNED NULL,
     title VARCHAR(190) NOT NULL,
     description TEXT NULL,
+    image_id INT UNSIGNED NULL,
     starts_at DATETIME NOT NULL,
     ends_at DATETIME NOT NULL,
     capacity INT UNSIGNED NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE RESTRICT,
     FOREIGN KEY (trainer_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (image_id) REFERENCES media_assets(id) ON DELETE SET NULL,
     INDEX idx_training_time (room_id, starts_at, ends_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

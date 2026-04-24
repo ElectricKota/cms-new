@@ -29,7 +29,19 @@
             <strong>{$item['galleryTitle']}</strong><br>
             #{$item['assetId']} {$item['assetName']}
         </figcaption>
-        <p class="actions"><a n:href="deleteItem $item['id']">Odebrat z galerie</a></p>
+        <p class="actions icon-actions">
+            <a n:if="!$item['isFirst']" n:href="moveItem $item['id'], direction: 'up'" class="icon-button" aria-label="Posunout nahoru" title="Posunout nahoru">
+                <span aria-hidden="true">↑</span>
+            </a>
+            <span n:if="$item['isFirst']" class="icon-button is-disabled" aria-hidden="true">↑</span>
+            <a n:if="!$item['isLast']" n:href="moveItem $item['id'], direction: 'down'" class="icon-button" aria-label="Posunout dolů" title="Posunout dolů">
+                <span aria-hidden="true">↓</span>
+            </a>
+            <span n:if="$item['isLast']" class="icon-button is-disabled" aria-hidden="true">↓</span>
+            <a n:href="deleteItem $item['id']" class="icon-button danger" aria-label="Odebrat z galerie" title="Odebrat z galerie" data-confirm-delete="Opravdu odebrat fotku z galerie?">
+                <span class="trash-icon" aria-hidden="true"></span>
+            </a>
+        </p>
     </figure>
 </div>
 
@@ -38,6 +50,10 @@
     <figure n:foreach="$media as $asset">
         {=cmsPicture($asset->id, width: 240, height: 160, alt: $asset->alt)}
         <figcaption>#{$asset->id} {$asset->original_name}</figcaption>
-        <p class="actions"><a n:href="deleteAsset $asset->id">Smazat z knihovny</a></p>
+        <p class="actions icon-actions">
+            <a n:href="deleteAsset $asset->id" class="icon-button danger" aria-label="Smazat fotku z knihovny" title="Smazat fotku z knihovny" data-confirm-delete="Opravdu smazat fotku z knihovny?">
+                <span class="trash-icon" aria-hidden="true"></span>
+            </a>
+        </p>
     </figure>
 </div>
