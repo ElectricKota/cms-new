@@ -190,7 +190,8 @@ input[type='submit'],
 }
 
 .flash,
-.error {
+.error,
+.empty-state {
   max-width: 58rem;
   margin: 0 0 1rem;
   border-radius: 8px;
@@ -203,6 +204,11 @@ input[type='submit'],
 .error {
   background: #fef3f2;
   color: var(--danger);
+}
+
+.empty-state {
+  background: #fff;
+  color: var(--muted);
 }
 
 table {

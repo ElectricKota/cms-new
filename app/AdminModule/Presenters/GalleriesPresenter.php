@@ -20,6 +20,7 @@ final class GalleriesPresenter extends BasePresenter
     {
         $this->template->items = $this->gateway->table('galleries')->order('title');
         $this->template->media = $this->gateway->table('media_assets')->order('created_at DESC')->limit(60);
+        $this->template->galleryItems = $this->galleryItems();
     }
 
     public function actionDelete(int $id): void
@@ -31,7 +32,38 @@ final class GalleriesPresenter extends BasePresenter
     public function actionDeleteAsset(int $id): void
     {
         $this->gateway->delete('media_assets', $id);
+        $this->flashMessage('Fotka smazána z knihovny.');
         $this->redirect('default');
+    }
+
+    public function actionDeleteItem(int $id): void
+    {
+        $this->gateway->delete('gallery_items', $id);
+        $this->flashMessage('Fotka odebrána z galerie.');
+        $this->redirect('default');
+    }
+
+    /** @return list<array{id:int,galleryTitle:string,assetId:int,assetName:string,assetAlt:string|null}> */
+    private function galleryItems(): array
+    {
+        $items = [];
+        foreach ($this->gateway->table('gallery_items')->order('gallery.title, position, id') as $item) {
+            $gallery = $item->ref('galleries', 'gallery_id');
+            $asset = $item->ref('media_assets', 'media_asset_id');
+            if ($gallery === null || $asset === null) {
+                continue;
+            }
+
+            $items[] = [
+                'id' => (int) $item['id'],
+                'galleryTitle' => (string) $gallery['title'],
+                'assetId' => (int) $asset['id'],
+                'assetName' => (string) $asset['original_name'],
+                'assetAlt' => $asset['alt'] !== null ? (string) $asset['alt'] : null,
+            ];
+        }
+
+        return $items;
     }
 
     protected function createComponentGalleryForm(): Form
