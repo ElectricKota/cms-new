@@ -48,6 +48,25 @@ body {
   margin-top: 1rem;
 }
 
+.admin-user {
+  display: grid;
+  gap: .2rem;
+  margin-top: 1rem;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: .8rem;
+  background: #1f2937;
+}
+
+.admin-user span,
+.admin-user small {
+  color: #bac6d3;
+}
+
+.admin-user strong {
+  color: #fff;
+}
+
 .admin-nav a {
   color: #e5edf5;
   padding: .65rem .75rem;

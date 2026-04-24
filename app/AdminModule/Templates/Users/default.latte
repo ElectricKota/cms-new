@@ -1,0 +1,17 @@
+{block title}Uživatelé{/block}
+{block content}
+<h1>Uživatelé</h1>
+<p><a n:href="edit" class="button">Nový uživatel</a></p>
+<table>
+    <tr><th>Jméno</th><th>E-mail</th><th>Role</th><th>Stav</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->name}</td>
+        <td>{$item->email}</td>
+        <td>{$roleLabels[$item->role] ?? $item->role}</td>
+        <td>{if $item->active}Aktivní{else}Vypnutý{/if}</td>
+        <td class="actions">
+            <a n:href="edit $item->id">Editovat</a>
+            <a n:href="delete $item->id">Smazat</a>
+        </td>
+    </tr>
+</table>

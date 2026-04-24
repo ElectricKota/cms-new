@@ -48,13 +48,28 @@ abstract class BasePresenter extends Presenter
             'OpeningHours:default' => 'Otevírací doba',
             'Rooms:default' => 'Místnosti',
             'Trainings:default' => 'Tréninky',
+            'Users:default' => 'Uživatelé',
             'Menu:default' => 'Menu',
         ];
+        $identity = $this->securityUser->getIdentity();
+        $this->template->currentUser = $identity;
+        $this->template->currentUserName = $identity?->getData()['name'] ?? 'Nepřihlášený uživatel';
+        $this->template->currentUserEmail = $identity?->getData()['email'] ?? null;
+        $this->template->currentUserRoles = $identity?->getRoles() ?? [];
     }
 
     protected function requireRole(string ...$roles): void
     {
-        if (!$this->securityUser->isInRole('admin') && !$this->securityUser->isInRole('manager')) {
+        $roles = $roles !== [] ? $roles : ['admin', 'manager'];
+        foreach ($roles as $role) {
+            if ($this->securityUser->isInRole($role)) {
+                return;
+            }
+        }
+
+        if (!$this->securityUser->isLoggedIn()) {
+            $this->redirect('Sign:in');
+        } else {
             $this->error('Nemáte oprávnění.', 403);
         }
     }

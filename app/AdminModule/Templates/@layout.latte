@@ -9,6 +9,12 @@
 <body class="admin-shell">
     <aside class="admin-nav">
         <strong>CMS</strong>
+        <div class="admin-user">
+            <span>Přihlášen</span>
+            <strong>{$currentUserName}</strong>
+            <small n:if="$currentUserEmail">{$currentUserEmail}</small>
+            <small>{implode(', ', $currentUserRoles)}</small>
+        </div>
         <nav>
             <a n:foreach="$adminMenu as $link => $label" n:href="$link">{$label}</a>
             <a n:href="Sign:out">Odhlásit</a>
