@@ -1,5 +1,11 @@
 @import 'tailwindcss';
-@import 'winduum/src/main.css';
+@import 'winduum/src/theme/index.css';
+@import 'winduum/src/base/reset.css';
+@import 'winduum/src/base/defaults.css';
+@import 'winduum/src/base/breakpoints.css';
+@import 'winduum/src/base/keyframes.css';
+@import 'winduum/src/components/index.css';
+@import 'winduum/src/utilities/index.css';
 
 :root {
   color-scheme: light;

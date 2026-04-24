@@ -3,11 +3,12 @@
 <h1>Tréninky</h1>
 {control trainingForm}
 <table>
-    <tr><th>Název</th><th>Začátek</th><th>Konec</th><th></th></tr>
+    <tr><th>Název</th><th>Začátek</th><th>Konec</th><th>Místnost</th><th>Kapacita</th></tr>
     <tr n:foreach="$items as $item">
         <td>{$item->title}</td>
         <td>{$item->starts_at}</td>
         <td>{$item->ends_at}</td>
         <td>{$item->room->title}</td>
+        <td>{$item->capacity}</td>
     </tr>
 </table>

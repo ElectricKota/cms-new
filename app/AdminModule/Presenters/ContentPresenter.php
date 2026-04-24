@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\Strings;
 
 final class ContentPresenter extends BasePresenter
 {
@@ -43,7 +42,6 @@ final class ContentPresenter extends BasePresenter
             'page' => 'Stránka',
         ])->setRequired();
         $form->addText('title', 'Titulek')->setRequired();
-        $form->addText('slug', 'Slug');
         $form->addTextArea('excerpt', 'Perex');
         $form->addTextArea('body', 'Text')
             ->setHtmlAttribute('data-controller', 'tinymce');
@@ -52,7 +50,7 @@ final class ContentPresenter extends BasePresenter
         $form->addSubmit('send', 'Uložit');
         $form->onSuccess[] = function (Form $form, array $values): void {
             $id = $this->getParameter('id');
-            $values['slug'] = $values['slug'] ?: Strings::webalize($values['title']);
+            $values['slug'] = $this->uniqueSlug('content_entries', $values['title'], $id !== null ? (int) $id : null);
             $values['updated_at'] = new \DateTimeImmutable();
             if ($id !== null) {
                 $this->gateway->update('content_entries', (int) $id, $values);

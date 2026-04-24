@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\Strings;
 
 final class ProductsPresenter extends BasePresenter
 {
@@ -34,7 +33,6 @@ final class ProductsPresenter extends BasePresenter
     {
         $form = new Form();
         $form->addText('title', 'Název')->setRequired();
-        $form->addText('slug', 'Slug');
         $form->addTextArea('description', 'Popisek')->setHtmlAttribute('data-controller', 'tinymce');
         $form->addInteger('main_image_id', 'Hlavní obrázek');
         $form->addText('category_names', 'Kategorie')->setHtmlAttribute('placeholder', 'Oddělit čárkou');
@@ -43,7 +41,7 @@ final class ProductsPresenter extends BasePresenter
         $form->addSubmit('send', 'Uložit');
         $form->onSuccess[] = function (Form $form, array $values): void {
             $id = $this->getParameter('id');
-            $values['slug'] = $values['slug'] ?: Strings::webalize($values['title']);
+            $values['slug'] = $this->uniqueSlug('products', $values['title'], $id !== null ? (int) $id : null);
             $values['updated_at'] = new \DateTimeImmutable();
             if ($id !== null) {
                 $this->gateway->update('products', (int) $id, $values);

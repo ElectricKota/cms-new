@@ -13,7 +13,20 @@ final class Bootstrap
     {
         $rootDir = dirname(__DIR__);
         $configurator = new Configurator();
-        $configurator->setTempDirectory($rootDir . '/temp');
+        umask(0002);
+
+        $runtimeUser = 'web';
+        if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+            $userInfo = posix_getpwuid(posix_geteuid());
+            $runtimeUser = is_array($userInfo) ? (string) $userInfo['name'] : $runtimeUser;
+        }
+
+        $tempDir = $rootDir . '/temp/runtime-' . preg_replace('~[^a-zA-Z0-9_-]+~', '-', $runtimeUser);
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0775, true);
+        }
+
+        $configurator->setTempDirectory($tempDir);
 
         $debugIps = ['127.0.0.1', '::1'];
         $debugCookie = $_COOKIE['nette-debug'] ?? null;

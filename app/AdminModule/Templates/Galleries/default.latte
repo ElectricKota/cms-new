@@ -1,13 +1,22 @@
 {block title}Galerie{/block}
 {block content}
 <h1>Galerie</h1>
+<section class="admin-section">
+    <h2>Nová galerie</h2>
 {control galleryForm}
+</section>
+
+<section class="admin-section">
+    <h2>Nahrát fotky</h2>
+    {control uploadForm}
+</section>
+
 <table>
     <tr><th>Název</th><th>Slug</th><th></th></tr>
     <tr n:foreach="$items as $item">
         <td>{$item->title}</td>
         <td>{$item->slug}</td>
-        <td><a n:href="delete $item->id">Smazat</a></td>
+        <td class="actions"><a n:href="delete $item->id">Smazat</a></td>
     </tr>
 </table>
 <h2>Knihovna médií</h2>
@@ -15,5 +24,6 @@
     <figure n:foreach="$media as $asset">
         {=cmsPicture($asset->id, width: 240, height: 160, alt: $asset->alt)}
         <figcaption>#{$asset->id} {$asset->original_name}</figcaption>
+        <p class="actions"><a n:href="deleteAsset $asset->id">Smazat fotku</a></p>
     </figure>
 </div>

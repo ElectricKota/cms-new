@@ -10,6 +10,7 @@ use App\Security\DebugBypassAuthorizator;
 use Nette\Application\UI\Presenter;
 use Nette\Http\IRequest;
 use Nette\Security\User;
+use Nette\Utils\Strings;
 
 abstract class BasePresenter extends Presenter
 {
@@ -55,6 +56,27 @@ abstract class BasePresenter extends Presenter
     {
         if (!$this->securityUser->isInRole('admin') && !$this->securityUser->isInRole('manager')) {
             $this->error('Nemáte oprávnění.', 403);
+        }
+    }
+
+    protected function uniqueSlug(string $table, string $title, ?int $exceptId = null): string
+    {
+        $base = Strings::webalize($title);
+        $slug = $base !== '' ? $base : 'polozka';
+        $suffix = 2;
+
+        while (true) {
+            $selection = $this->gateway->table($table)->where('slug', $slug);
+            if ($exceptId !== null) {
+                $selection->where('id != ?', $exceptId);
+            }
+
+            if ($selection->count('*') === 0) {
+                return $slug;
+            }
+
+            $slug = $base . '-' . $suffix;
+            $suffix++;
         }
     }
 }

@@ -134,11 +134,12 @@ CREATE TABLE IF NOT EXISTS price_items (
 
 CREATE TABLE IF NOT EXISTS opening_hours (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    date_from DATE NOT NULL,
-    date_to DATE NULL,
-    time_from TIME NOT NULL,
-    time_to TIME NOT NULL,
-    note VARCHAR(255) NULL
+    label_from VARCHAR(120) NOT NULL,
+    label_to VARCHAR(120) NULL,
+    time_from VARCHAR(40) NOT NULL,
+    time_to VARCHAR(40) NOT NULL,
+    note VARCHAR(255) NULL,
+    position INT NOT NULL DEFAULT 100
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS rooms (
@@ -153,7 +154,7 @@ CREATE TABLE IF NOT EXISTS rooms (
 CREATE TABLE IF NOT EXISTS trainings (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     room_id INT UNSIGNED NOT NULL,
-    trainer_user_id INT UNSIGNED NOT NULL,
+    trainer_user_id INT UNSIGNED NULL,
     title VARCHAR(190) NOT NULL,
     description TEXT NULL,
     starts_at DATETIME NOT NULL,
@@ -161,7 +162,7 @@ CREATE TABLE IF NOT EXISTS trainings (
     capacity INT UNSIGNED NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE RESTRICT,
-    FOREIGN KEY (trainer_user_id) REFERENCES users(id) ON DELETE RESTRICT,
+    FOREIGN KEY (trainer_user_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_training_time (room_id, starts_at, ends_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

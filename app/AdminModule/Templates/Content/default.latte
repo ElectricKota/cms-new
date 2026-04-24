@@ -1,13 +1,13 @@
 {block title}Obsah{/block}
 {block content}
 <h1>Obsah</h1>
-<p><a n:href="edit">Nový záznam</a></p>
+<p><a n:href="edit" class="button">Nový záznam</a></p>
 <table>
     <tr><th>Typ</th><th>Titulek</th><th>Slug</th><th></th></tr>
     <tr n:foreach="$items as $item">
         <td>{$item->type}</td>
         <td>{$item->title}</td>
         <td>{$item->slug}</td>
-        <td><a n:href="edit $item->id">Editovat</a> <a n:href="delete $item->id">Smazat</a></td>
+        <td class="actions"><a n:href="edit $item->id">Editovat</a> <a n:href="delete $item->id">Smazat</a></td>
     </tr>
 </table>

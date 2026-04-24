@@ -10,7 +10,7 @@ final class OpeningHoursPresenter extends BasePresenter
 {
     public function renderDefault(): void
     {
-        $this->template->items = $this->gateway->table('opening_hours')->order('date_from DESC, time_from');
+        $this->template->items = $this->gateway->table('opening_hours')->order('position, id DESC');
     }
 
     public function actionDelete(int $id): void
@@ -22,11 +22,14 @@ final class OpeningHoursPresenter extends BasePresenter
     protected function createComponentOpeningForm(): Form
     {
         $form = new Form();
-        $form->addText('date_from', 'Datum od')->setHtmlType('date')->setRequired();
-        $form->addText('date_to', 'Datum do')->setHtmlType('date');
-        $form->addText('time_from', 'Čas od')->setHtmlType('time')->setRequired();
-        $form->addText('time_to', 'Čas do')->setHtmlType('time')->setRequired();
+        $form->addText('label_from', 'Text od')
+            ->setHtmlAttribute('placeholder', 'Pondělí, víkend, svátek')
+            ->setRequired();
+        $form->addText('label_to', 'Text do')->setHtmlAttribute('placeholder', 'Pátek, neděle');
+        $form->addText('time_from', 'Čas od')->setRequired();
+        $form->addText('time_to', 'Čas do')->setRequired();
         $form->addText('note', 'Poznámka');
+        $form->addInteger('position', 'Pořadí')->setDefaultValue(100);
         $form->addSubmit('send', 'Přidat');
         $form->onSuccess[] = function (Form $form, array $values): void {
             $this->gateway->insert('opening_hours', $values);

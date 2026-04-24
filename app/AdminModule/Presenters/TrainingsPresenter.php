@@ -19,15 +19,45 @@ final class TrainingsPresenter extends BasePresenter
         $form = new Form();
         $form->addSelect('room_id', 'Místnost', $rooms)->setRequired();
         $form->addText('title', 'Název')->setRequired();
-        $form->addText('starts_at', 'Začátek')->setHtmlType('datetime-local')->setRequired();
-        $form->addText('ends_at', 'Konec')->setHtmlType('datetime-local')->setRequired();
-        $form->addInteger('capacity', 'Kapacita')->setNullable();
+        $form->addText('date', 'Datum')->setHtmlType('date')->setRequired();
+        $form->addText('time_from', 'Čas od')->setHtmlType('time')->setRequired();
+        $form->addText('time_to', 'Čas do')->setHtmlType('time')->setRequired();
         $form->addTextArea('description', 'Popis');
         $form->addSubmit('send', 'Vytvořit');
         $form->onSuccess[] = function (Form $form, array $values): void {
-            $values['trainer_user_id'] = (int) $this->getUser()->getId();
-            $values['created_at'] = new \DateTimeImmutable();
-            $this->gateway->insert('trainings', $values);
+            $room = $this->gateway->find('rooms', (int) $values['room_id']);
+            if ($room === null) {
+                $form->addError('Vybraná místnost neexistuje.');
+                return;
+            }
+
+            $startsAt = new \DateTimeImmutable($values['date'] . ' ' . $values['time_from']);
+            $endsAt = new \DateTimeImmutable($values['date'] . ' ' . $values['time_to']);
+            if ($endsAt <= $startsAt) {
+                $form->addError('Konec tréninku musí být po začátku.');
+                return;
+            }
+
+            $overlap = $this->gateway->table('trainings')
+                ->where('room_id', $values['room_id'])
+                ->where('starts_at < ?', $endsAt)
+                ->where('ends_at > ?', $startsAt)
+                ->count('*') > 0;
+            if ($overlap) {
+                $form->addError('Místnost je v tomto čase už obsazená.');
+                return;
+            }
+
+            $this->gateway->insert('trainings', [
+                'room_id' => $values['room_id'],
+                'trainer_user_id' => $this->getUser()->getId() !== null ? (int) $this->getUser()->getId() : null,
+                'title' => $values['title'],
+                'description' => $values['description'],
+                'starts_at' => $startsAt,
+                'ends_at' => $endsAt,
+                'capacity' => $room['capacity'],
+                'created_at' => new \DateTimeImmutable(),
+            ]);
             $this->redirect('default');
         };
         return $form;
