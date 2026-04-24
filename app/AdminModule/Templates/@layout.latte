@@ -40,7 +40,9 @@
         </nav>
     </aside>
     <main class="admin-main">
-        <div n:foreach="$flashes as $flash" class="flash">{$flash->message}</div>
+        <div n:if="$flashes" class="flash-stack" role="status" aria-live="polite">
+            <div n:foreach="$flashes as $flash" class="flash">{$flash->message}</div>
+        </div>
         {include content}
     </main>
     <dialog class="confirm-dialog" data-delete-dialog>

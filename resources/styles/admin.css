@@ -305,12 +305,16 @@ input[type='submit'],
 }
 
 .confirm-dialog {
+  position: fixed;
+  inset: 50% auto auto 50%;
   width: min(92vw, 28rem);
   border: 0;
   border-radius: 10px;
+  margin: 0;
   padding: 0;
   color: var(--ink);
   background: transparent;
+  transform: translate(-50%, -50%);
 }
 
 .confirm-dialog::backdrop {
@@ -353,6 +357,24 @@ input[type='submit'],
   background: #ecfdf3;
   color: var(--success);
   font-weight: 650;
+}
+
+.flash-stack {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 80;
+  display: grid;
+  gap: .6rem;
+  width: min(24rem, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.flash-stack .flash {
+  max-width: none;
+  margin: 0;
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
 }
 
 .error {
