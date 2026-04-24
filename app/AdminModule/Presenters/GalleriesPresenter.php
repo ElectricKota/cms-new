@@ -16,16 +16,22 @@ final class GalleriesPresenter extends BasePresenter
 
     private ImageUploadService $imageUploadService;
 
-    public function renderDefault(): void
+    public function renderDefault(?int $galleryId = null): void
     {
-        $this->template->items = $this->gateway->table('galleries')->order('title');
+        $galleries = $this->gateway->table('galleries')->order('title')->fetchAll();
+        $activeGalleryId = $this->validGalleryId($galleryId, $galleries);
+
+        $this->template->items = $galleries;
+        $this->template->activeGalleryId = $activeGalleryId;
+        $this->template->galleryTabs = $this->galleryTabs($galleries);
         $this->template->media = $this->gateway->table('media_assets')->order('created_at DESC')->limit(60);
-        $this->template->galleryItems = $this->galleryItems();
+        $this->template->galleryItems = $this->galleryItems($activeGalleryId);
     }
 
     public function actionDelete(int $id): void
     {
         $this->gateway->delete('galleries', $id);
+        $this->flashMessage('Galerie smazána.');
         $this->redirect('default');
     }
 
@@ -38,16 +44,18 @@ final class GalleriesPresenter extends BasePresenter
 
     public function actionDeleteItem(int $id): void
     {
+        $item = $this->gateway->find('gallery_items', $id);
+        $galleryId = $item !== null ? (int) $item['gallery_id'] : null;
         $this->gateway->delete('gallery_items', $id);
         $this->flashMessage('Fotka odebrána z galerie.');
-        $this->redirect('default');
+        $this->redirect('default', ['galleryId' => $galleryId]);
     }
 
     public function actionMoveItem(int $id, string $direction): void
     {
         $item = $this->gateway->find('gallery_items', $id);
         if ($item === null || !in_array($direction, ['up', 'down'], true)) {
-            $this->redirect('default');
+            $this->redirect('default', ['galleryId' => (int) $item['gallery_id']]);
         }
 
         $items = $this->gateway->table('gallery_items')
@@ -62,12 +70,12 @@ final class GalleriesPresenter extends BasePresenter
         $ids = array_map(static fn ($row): int => (int) $row['id'], $items);
         $currentIndex = array_search((int) $id, $ids, true);
         if ($currentIndex === false) {
-            $this->redirect('default');
+            $this->redirect('default', ['galleryId' => (int) $item['gallery_id']]);
         }
 
         $targetIndex = $direction === 'up' ? $currentIndex - 1 : $currentIndex + 1;
         if (!isset($items[$targetIndex])) {
-            $this->redirect('default');
+            $this->redirect('default', ['galleryId' => (int) $item['gallery_id']]);
         }
 
         $current = $items[$currentIndex];
@@ -75,14 +83,47 @@ final class GalleriesPresenter extends BasePresenter
         $currentPosition = $current['position'];
         $current->update(['position' => $target['position']]);
         $target->update(['position' => $currentPosition]);
-        $this->redirect('default');
+        $this->redirect('default', ['galleryId' => (int) $item['gallery_id']]);
     }
 
-    /** @return list<array{id:int,galleryTitle:string,assetId:int,assetName:string,assetAlt:string|null,isFirst:bool,isLast:bool}> */
-    private function galleryItems(): array
+    /**
+     * @param list<\Nette\Database\Table\ActiveRow> $galleries
+     * @return list<array{id:int,title:string}>
+     */
+    private function galleryTabs(array $galleries): array
+    {
+        return array_map(
+            static fn ($gallery): array => ['id' => (int) $gallery['id'], 'title' => (string) $gallery['title']],
+            $galleries
+        );
+    }
+
+    /** @param list<\Nette\Database\Table\ActiveRow> $galleries */
+    private function validGalleryId(?int $galleryId, array $galleries): ?int
+    {
+        if ($galleryId === null) {
+            return null;
+        }
+
+        foreach ($galleries as $gallery) {
+            if ((int) $gallery['id'] === $galleryId) {
+                return $galleryId;
+            }
+        }
+
+        return null;
+    }
+
+    /** @return list<array{id:int,galleryId:int,galleryTitle:string,assetId:int,assetName:string,assetAlt:string|null,fullUrl:string,isFirst:bool,isLast:bool}> */
+    private function galleryItems(?int $galleryId = null): array
     {
         $items = [];
-        $rows = $this->gateway->table('gallery_items')->order('gallery.title, position, id')->fetchAll();
+        $selection = $this->gateway->table('gallery_items')->order('gallery.title, position, id');
+        if ($galleryId !== null) {
+            $selection->where('gallery_id', $galleryId);
+        }
+
+        $rows = $selection->fetchAll();
         $counts = [];
 
         foreach ($rows as $row) {
@@ -103,10 +144,12 @@ final class GalleriesPresenter extends BasePresenter
 
             $items[] = [
                 'id' => (int) $item['id'],
+                'galleryId' => $galleryId,
                 'galleryTitle' => (string) $gallery['title'],
                 'assetId' => (int) $asset['id'],
                 'assetName' => (string) $asset['original_name'],
                 'assetAlt' => $asset['alt'] !== null ? (string) $asset['alt'] : null,
+                'fullUrl' => '/uploads/originals/' . (string) $asset['stored_name'],
                 'isFirst' => $positions[$galleryId] === 1,
                 'isLast' => $positions[$galleryId] === $counts[$galleryId],
             ];
@@ -148,8 +191,17 @@ final class GalleriesPresenter extends BasePresenter
     protected function createComponentUploadForm(): Form
     {
         $form = new Form();
-        $form->addSelect('gallery_id', 'Galerie', $this->gateway->table('galleries')->fetchPairs('id', 'title'))
+        $gallery = $form->addSelect(
+            'gallery_id',
+            'Galerie',
+            $this->gateway->table('galleries')->fetchPairs('id', 'title')
+        )
             ->setPrompt('Jen nahrát do knihovny');
+        $galleryId = $this->getParameter('galleryId');
+        if ($galleryId !== null) {
+            $gallery->setDefaultValue((int) $galleryId);
+        }
+
         $form->addMultiUpload('images', 'Fotky')
             ->setRequired('Vyberte aspoň jednu fotku.')
             ->setHtmlAttribute('accept', 'image/*')

@@ -3,6 +3,8 @@ import Nette from 'nette-forms'
 import AirDatepicker from 'air-datepicker'
 import localeCs from 'air-datepicker/locale/cs'
 import 'air-datepicker/air-datepicker.css'
+import lightbox from 'lightbox2'
+import 'lightbox2/dist/css/lightbox.css'
 import '../styles/admin.css'
 import tinymce from 'tinymce/tinymce'
 import 'tinymce/icons/default'
@@ -80,6 +82,82 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initDatepickers)
 } else {
   initDatepickers()
+}
+
+lightbox.option({
+  albumLabel: 'Fotka %1 z %2',
+  fadeDuration: 160,
+  imageFadeDuration: 160,
+  resizeDuration: 180,
+  wrapAround: true
+})
+
+const initFileDrops = () => {
+  document.querySelectorAll('input[type="file"]').forEach((input) => {
+    if (!(input instanceof HTMLInputElement) || input.dataset.filedropReady === 'true') {
+      return
+    }
+
+    input.dataset.filedropReady = 'true'
+    if (!input.id) {
+      input.id = `filedrop-${Math.random().toString(36).slice(2)}`
+    }
+
+    input.classList.add('filedrop__input')
+
+    const dropzone = document.createElement('label')
+    dropzone.className = 'filedrop'
+    dropzone.htmlFor = input.id
+
+    const title = document.createElement('span')
+    title.className = 'filedrop__title'
+    title.textContent = 'Přetáhněte fotky sem'
+
+    const hint = document.createElement('span')
+    hint.className = 'filedrop__hint'
+    hint.textContent = 'nebo klikněte a vyberte soubory z počítače'
+
+    const files = document.createElement('span')
+    files.className = 'filedrop__files'
+    files.textContent = 'Soubor nevybrán'
+
+    input.parentNode?.insertBefore(dropzone, input)
+    dropzone.append(title, hint, files, input)
+
+    const refreshFiles = () => {
+      const selected = Array.from(input.files ?? [])
+      files.textContent = selected.length > 0
+        ? selected.map((file) => file.name).join(', ')
+        : 'Soubor nevybrán'
+    }
+
+    input.addEventListener('change', refreshFiles)
+
+    dropzone.addEventListener('dragover', (event) => {
+      event.preventDefault()
+      dropzone.classList.add('is-dragover')
+    })
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('is-dragover')
+    })
+
+    dropzone.addEventListener('drop', (event) => {
+      event.preventDefault()
+      dropzone.classList.remove('is-dragover')
+
+      if (event.dataTransfer?.files.length) {
+        input.files = event.dataTransfer.files
+        input.dispatchEvent(new Event('change', { bubbles: true }))
+      }
+    })
+  })
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFileDrops)
+} else {
+  initFileDrops()
 }
 
 const deleteDialog = document.querySelector('[data-delete-dialog]')

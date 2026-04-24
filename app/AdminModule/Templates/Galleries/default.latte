@@ -11,20 +11,31 @@
     {control uploadForm}
 </section>
 
+<h2>Správa galerií</h2>
 <table>
     <tr><th>Název</th><th>Slug</th><th></th></tr>
     <tr n:foreach="$items as $item">
         <td>{$item->title}</td>
         <td>{$item->slug}</td>
-        <td class="actions"><a n:href="delete $item->id">Smazat</a></td>
+        <td class="actions icon-actions">
+            <a n:href="delete $item->id" class="icon-button danger" aria-label="Smazat galerii" title="Smazat galerii" data-confirm-delete="Opravdu smazat celou galerii? Fotky v knihovně zůstanou.">
+                <span class="trash-icon" aria-hidden="true"></span>
+            </a>
+        </td>
     </tr>
 </table>
 
 <h2>Fotky v galeriích</h2>
+<nav class="gallery-tabs" aria-label="Výběr galerie">
+    <a n:href="default galleryId: null" class="{if $activeGalleryId === null}is-active{/if}" aria-current="{if $activeGalleryId === null}page{/if}">Všechny galerie</a>
+    <a n:foreach="$galleryTabs as $tab" n:href="default galleryId: $tab['id']" class="{if $activeGalleryId === $tab['id']}is-active{/if}" aria-current="{if $activeGalleryId === $tab['id']}page{/if}">{$tab['title']}</a>
+</nav>
 <div n:if="!$galleryItems" class="empty-state">V galeriích zatím nejsou žádné fotky.</div>
 <div class="media-grid" n:if="$galleryItems">
     <figure n:foreach="$galleryItems as $item">
-        {=cmsPicture($item['assetId'], width: 240, height: 160, alt: $item['assetAlt'] ?? $item['assetName'])}
+        <a href="{$item['fullUrl']}" class="media-preview" data-lightbox="gallery-{$activeGalleryId ?? 'all'}" data-title="{$item['assetName']}">
+            {=cmsPicture($item['assetId'], width: 520, height: 520, alt: $item['assetAlt'] ?? $item['assetName'], class: 'media-preview__image')}
+        </a>
         <figcaption>
             <strong>{$item['galleryTitle']}</strong><br>
             #{$item['assetId']} {$item['assetName']}
@@ -48,7 +59,9 @@
 <h2>Knihovna médií</h2>
 <div class="media-grid">
     <figure n:foreach="$media as $asset">
-        {=cmsPicture($asset->id, width: 240, height: 160, alt: $asset->alt)}
+        <a href="/uploads/originals/{$asset->stored_name}" class="media-preview" data-lightbox="media-library" data-title="{$asset->original_name}">
+            {=cmsPicture($asset->id, width: 520, height: 520, alt: $asset->alt, class: 'media-preview__image')}
+        </a>
         <figcaption>#{$asset->id} {$asset->original_name}</figcaption>
         <p class="actions icon-actions">
             <a n:href="deleteAsset $asset->id" class="icon-button danger" aria-label="Smazat fotku z knihovny" title="Smazat fotku z knihovny" data-confirm-delete="Opravdu smazat fotku z knihovny?">
