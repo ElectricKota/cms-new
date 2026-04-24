@@ -48,7 +48,11 @@ final class TrainingsPresenter extends BasePresenter
 
         $form->addText('title', 'Název')->setRequired();
         $form->addInteger('image_id', 'ID fotky')->setNullable();
-        $form->addText('date', 'Datum')->setHtmlType('date')->setRequired();
+        $form->addText('date', 'Datum')
+            ->setHtmlType('text')
+            ->setHtmlAttribute('data-controller', 'datepicker')
+            ->setHtmlAttribute('placeholder', 'dd.mm.rrrr')
+            ->setRequired();
         $form->addText('time_from', 'Čas od')->setHtmlType('time')->setRequired();
         $form->addText('time_to', 'Čas do')->setHtmlType('time')->setRequired();
         $form->addTextArea('description', 'Popis')
@@ -79,8 +83,13 @@ final class TrainingsPresenter extends BasePresenter
                 }
             }
 
-            $startsAt = new \DateTimeImmutable($values['date'] . ' ' . $values['time_from']);
-            $endsAt = new \DateTimeImmutable($values['date'] . ' ' . $values['time_to']);
+            $startsAt = $this->createDateTime((string) $values['date'], (string) $values['time_from']);
+            $endsAt = $this->createDateTime((string) $values['date'], (string) $values['time_to']);
+            if ($startsAt === null || $endsAt === null) {
+                $form->addError('Zadejte platné datum a čas tréninku.');
+                return;
+            }
+
             if ($endsAt <= $startsAt) {
                 $form->addError('Konec tréninku musí být po začátku.');
                 return;
@@ -110,5 +119,15 @@ final class TrainingsPresenter extends BasePresenter
             $this->redirect('default');
         };
         return $form;
+    }
+
+    private function createDateTime(string $date, string $time): ?\DateTimeImmutable
+    {
+        $date = trim($date);
+        $time = trim($time);
+        $format = str_contains($date, '.') ? '!d.m.Y H:i' : '!Y-m-d H:i';
+        $dateTime = \DateTimeImmutable::createFromFormat($format, $date . ' ' . $time);
+
+        return $dateTime !== false ? $dateTime : null;
     }
 }

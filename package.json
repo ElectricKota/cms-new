@@ -11,6 +11,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@tailwindcss/vite": "^4.1.0",
+    "air-datepicker": "^3.6.0",
     "nette-forms": "^3.5.0",
     "tinymce": "^6.8.5",
     "winduum": "latest"

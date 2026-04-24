@@ -1,6 +1,9 @@
-import '../styles/admin.css'
 import { Application, Controller } from '@hotwired/stimulus'
 import Nette from 'nette-forms'
+import AirDatepicker from 'air-datepicker'
+import localeCs from 'air-datepicker/locale/cs'
+import 'air-datepicker/air-datepicker.css'
+import '../styles/admin.css'
 import tinymce from 'tinymce/tinymce'
 import 'tinymce/icons/default'
 import 'tinymce/themes/silver'
@@ -55,6 +58,29 @@ application.register('tinymce', class extends Controller {
     tinymce.remove(this.element)
   }
 })
+
+const initDatepickers = () => {
+  document.querySelectorAll('[data-controller~="datepicker"]').forEach((element) => {
+    if (element instanceof HTMLInputElement && element.dataset.datepickerReady !== 'true') {
+      const datepicker = new AirDatepicker(element, {
+        locale: localeCs,
+        autoClose: true,
+        buttons: ['today', 'clear'],
+        dateFormat: 'dd.MM.yyyy',
+        position: 'bottom left'
+      })
+      element.dataset.datepickerReady = 'true'
+      element.addEventListener('focus', () => datepicker.show())
+      element.addEventListener('click', () => datepicker.show())
+    }
+  })
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDatepickers)
+} else {
+  initDatepickers()
+}
 
 const deleteDialog = document.querySelector('[data-delete-dialog]')
 
