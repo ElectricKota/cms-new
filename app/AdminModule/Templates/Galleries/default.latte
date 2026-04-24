@@ -1,0 +1,19 @@
+{block title}Galerie{/block}
+{block content}
+<h1>Galerie</h1>
+{control galleryForm}
+<table>
+    <tr><th>Název</th><th>Slug</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->title}</td>
+        <td>{$item->slug}</td>
+        <td><a n:href="delete $item->id">Smazat</a></td>
+    </tr>
+</table>
+<h2>Knihovna médií</h2>
+<div class="media-grid">
+    <figure n:foreach="$media as $asset">
+        {=cmsPicture($asset->id, width: 240, height: 160, alt: $asset->alt)}
+        <figcaption>#{$asset->id} {$asset->original_name}</figcaption>
+    </figure>
+</div>

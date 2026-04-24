@@ -1,0 +1,7 @@
+{block title}{$page->title}{/block}
+{block content}
+<article class="content-detail">
+    <h1>{$page->title}</h1>
+    {if $page->image_id}{=cmsPicture($page->image_id, width: 1280, height: 720, alt: $page->title)}{/if}
+    <div>{$page->body|noescape}</div>
+</article>

@@ -1,0 +1,35 @@
+parameters:
+    appDir: %rootDir%/app
+    wwwDir: %rootDir%/www
+    uploadsDir: %wwwDir%/uploads
+    allowedDebugIps:
+        - 127.0.0.1
+        - ::1
+
+database:
+    dsn: %env.DB_DSN%
+    user: %env.DB_USER%
+    password: %env.DB_PASSWORD%
+
+application:
+    errorPresenter: Error:Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+
+latte:
+    strictTypes: yes
+    strictParsing: yes
+    extensions:
+        - App\Media\ImageLatteExtension
+
+session:
+    expiration: 14 days
+
+services:
+    - App\Core\RouterFactory::createRouter
+    - App\Core\Vite(%wwwDir%)
+    - App\Database\TableGateway
+    - App\Media\ImageVariantService(%uploadsDir%)
+    - App\Media\ImageUploadService(%uploadsDir%)
+    - App\Security\CmsAuthenticator
+    - App\Security\DebugBypassAuthorizator(%allowedDebugIps%)

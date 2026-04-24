@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{ifset title}{include title|stripHtml}{else}{$settings->company_name ?? 'Web'}{/ifset}</title>
+    <meta name="description" content="{$settings->description ?? ''}">
+    {if $settings?->tracking_head}{$settings->tracking_head|noescape}{/if}
+    {$vite->tags('resources/js/front.js')|noescape}
+</head>
+<body>
+    {if $settings?->tracking_body}{$settings->tracking_body|noescape}{/if}
+    <header class="site-header">
+        <a n:href="Homepage:default" class="brand">{$settings->company_name ?? 'CMS'}</a>
+        <nav>
+            <a n:foreach="$menuItems as $item" href="{include menuTarget item: $item}">{$item->title}</a>
+        </nav>
+    </header>
+    <main>
+        {include content}
+    </main>
+    <footer class="site-footer">
+        <strong>{$settings->company_name ?? ''}</strong>
+        <span>{$settings->phone ?? ''}</span>
+        <a href="mailto:{$settings->email ?? ''}">{$settings->email ?? ''}</a>
+    </footer>
+</body>
+</html>
+
+{define menuTarget $item}
+{if $item->target_type === 'news_index'}{link News:default}
+{elseif $item->target_type === 'article_index'}{link Articles:default}
+{elseif $item->target_type === 'anchor'}#{$item->target_value}
+{else}{$item->target_value}
+{/if}
+{/define}

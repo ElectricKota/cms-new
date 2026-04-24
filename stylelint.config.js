@@ -1,0 +1,7 @@
+export default {
+  extends: ['stylelint-config-standard'],
+  rules: {
+    'import-notation': null,
+    'selector-class-pattern': null
+  }
+}

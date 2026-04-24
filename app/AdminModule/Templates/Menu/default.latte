@@ -1,0 +1,13 @@
+{block title}Menu{/block}
+{block content}
+<h1>Menu</h1>
+{control menuForm}
+<table>
+    <tr><th>Text</th><th>Typ</th><th>Cíl</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->title}</td>
+        <td>{$item->target_type}</td>
+        <td>{$item->target_value}</td>
+        <td><a n:href="delete $item->id">Smazat</a></td>
+    </tr>
+</table>

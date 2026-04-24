@@ -1,0 +1,12 @@
+{block title}Místnosti{/block}
+{block content}
+<h1>Místnosti</h1>
+{control roomForm}
+<table>
+    <tr><th>Název</th><th>Kapacita</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->title}</td>
+        <td>{$item->capacity}</td>
+        <td><a n:href="delete $item->id">Smazat</a></td>
+    </tr>
+</table>

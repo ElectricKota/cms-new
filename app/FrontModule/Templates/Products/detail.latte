@@ -1,0 +1,7 @@
+{block title}{$product->title}{/block}
+{block content}
+<article class="content-detail">
+    <h1>{$product->title}</h1>
+    {if $product->main_image_id}{=cmsPicture($product->main_image_id, width: 1280, height: 960, alt: $product->title)}{/if}
+    <div>{$product->description|noescape}</div>
+</article>

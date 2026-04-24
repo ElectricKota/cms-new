@@ -1,0 +1,10 @@
+{block title}Produkty{/block}
+{block content}
+<h1>Produkty</h1>
+<div class="card-grid">
+    <article n:foreach="$items as $product">
+        {if $product->main_image_id}{=cmsPicture($product->main_image_id, width: 640, height: 480, alt: $product->title)}{/if}
+        <h2><a n:href="detail $product->slug">{$product->title}</a></h2>
+        <p>{$product->category_names}</p>
+    </article>
+</div>

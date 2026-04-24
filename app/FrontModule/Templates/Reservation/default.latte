@@ -1,0 +1,11 @@
+{block title}Rezervace{/block}
+{block content}
+<h1>Rezervace</h1>
+{control registrationForm}
+<div class="card-grid">
+    <article n:foreach="$trainings as $training">
+        <h2>{$training->title}</h2>
+        <p>{$training->starts_at|date:'j. n. Y H:i'} - {$training->ends_at|date:'H:i'}</p>
+        <p>{$training->room->title}</p>
+    </article>
+</div>

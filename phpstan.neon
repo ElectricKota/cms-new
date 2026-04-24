@@ -1,0 +1,8 @@
+includes:
+    - vendor/efabrica/phpstan-latte/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - app
+    tmpDir: temp/phpstan

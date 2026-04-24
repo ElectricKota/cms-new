@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+@import 'winduum/src/main.css';
+
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+
+  --ink: #17201b;
+  --muted: #65736a;
+  --line: #dce4de;
+  --accent: #176a4d;
+  --paper: #f7f8f4;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.site-header,
+.site-footer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+
+.brand {
+  color: var(--ink);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+nav a {
+  color: var(--accent);
+}
+
+main {
+  display: grid;
+  gap: clamp(2.5rem, 7vw, 6rem);
+  padding: clamp(1.25rem, 5vw, 5rem);
+}
+
+.hero {
+  min-height: 58vh;
+  display: grid;
+  align-items: end;
+  padding-block: 8vh;
+}
+
+.hero h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(3rem, 12vw, 8rem);
+  line-height: .92;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+}
+
+.card-grid article,
+.price-list article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.content-detail {
+  max-width: 72rem;
+}

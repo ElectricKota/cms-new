@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="CMS New">
+    <rule ref="PSR12"/>
+    <file>app</file>
+    <exclude-pattern>*/Templates/*</exclude-pattern>
+</ruleset>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{ifset title}{include title|stripHtml} | {/ifset}CMS</title>
+    {$vite->tags('resources/js/admin.js')|noescape}
+</head>
+<body class="admin-shell">
+    <aside class="admin-nav">
+        <strong>CMS</strong>
+        <nav>
+            <a n:foreach="$adminMenu as $link => $label" n:href="$link">{$label}</a>
+            <a n:href="Sign:out">Odhlásit</a>
+        </nav>
+    </aside>
+    <main class="admin-main">
+        <div n:foreach="$flashes as $flash" class="flash">{$flash->message}</div>
+        {include content}
+    </main>
+</body>
+</html>

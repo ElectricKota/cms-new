@@ -1,0 +1,13 @@
+{block title}Otevírací doba{/block}
+{block content}
+<h1>Otevírací doba</h1>
+{control openingForm}
+<table>
+    <tr><th>Od</th><th>Do</th><th>Čas</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->date_from}</td>
+        <td>{$item->date_to}</td>
+        <td>{$item->time_from} - {$item->time_to}</td>
+        <td><a n:href="delete $item->id">Smazat</a></td>
+    </tr>
+</table>

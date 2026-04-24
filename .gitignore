@@ -1,0 +1,14 @@
+/.idea
+/.DS_Store
+/vendor
+/node_modules
+/temp/*
+/log/*
+/www/assets
+/www/uploads/cache/*
+/www/uploads/originals/*
+!/temp/.gitkeep
+!/log/.gitkeep
+!/www/uploads/cache/.gitkeep
+!/www/uploads/originals/.gitkeep
+/.env.local

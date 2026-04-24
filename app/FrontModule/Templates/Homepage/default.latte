@@ -1,0 +1,42 @@
+{block title}{$settings->company_name ?? 'Úvod'}{/block}
+{block content}
+<section class="hero">
+    <div>
+        <p>{$settings->person_name ?? ''}</p>
+        <h1>{$settings->company_name ?? 'Nový web'}</h1>
+        <div>{$settings->intro_text|noescape}</div>
+    </div>
+</section>
+
+<section id="novinky">
+    <h2>Novinky</h2>
+    <div class="card-grid">
+        <article n:foreach="$news as $item">
+            {if $item->image_id}{=cmsPicture($item->image_id, width: 640, height: 360, alt: $item->title)}{/if}
+            <h3><a n:href="News:detail $item->slug">{$item->title}</a></h3>
+            <p>{$item->excerpt}</p>
+        </article>
+    </div>
+</section>
+
+<section id="produkty">
+    <h2>Produkty</h2>
+    <div class="card-grid">
+        <article n:foreach="$products as $product">
+            {if $product->main_image_id}{=cmsPicture($product->main_image_id, width: 640, height: 480, alt: $product->title)}{/if}
+            <h3><a n:href="Products:detail $product->slug">{$product->title}</a></h3>
+            <div>{$product->description|striptags|truncate:180}</div>
+        </article>
+    </div>
+</section>
+
+<section id="cenik">
+    <h2>Ceník</h2>
+    <div class="price-list">
+        <article n:foreach="$pricing as $item">
+            <strong>{$item->title}</strong>
+            <span>{$item->price}</span>
+            <p>{$item->description}</p>
+        </article>
+    </div>
+</section>

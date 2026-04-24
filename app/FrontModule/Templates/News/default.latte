@@ -1,0 +1,10 @@
+{block title}Novinky{/block}
+{block content}
+<h1>Novinky</h1>
+<div class="card-grid">
+    <article n:foreach="$items as $item">
+        {if $item->image_id}{=cmsPicture($item->image_id, width: 640, height: 360, alt: $item->title)}{/if}
+        <h2><a n:href="detail $item->slug">{$item->title}</a></h2>
+        <p>{$item->excerpt}</p>
+    </article>
+</div>

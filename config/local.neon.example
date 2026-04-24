@@ -1,0 +1,9 @@
+parameters:
+    allowedDebugIps:
+        - 127.0.0.1
+        - ::1
+
+database:
+    dsn: 'mysql:host=127.0.0.1;dbname=cmd-new;charset=utf8mb4'
+    user: root
+    password: '32101'

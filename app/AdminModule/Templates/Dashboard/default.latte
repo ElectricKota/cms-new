@@ -1,0 +1,9 @@
+{block title}Přehled{/block}
+{block content}
+<h1>Přehled</h1>
+<div class="dashboard-grid">
+    <article n:foreach="$counts as $label => $count">
+        <span>{$label}</span>
+        <strong>{$count}</strong>
+    </article>
+</div>

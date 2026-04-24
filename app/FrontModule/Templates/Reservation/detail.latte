@@ -1,0 +1,5 @@
+{block title}Rezervace{/block}
+{block content}
+<h1>Rezervace</h1>
+<p>{$registration->name}, {$registration->email}</p>
+<p><a n:href="cancel $registration->cancel_token">Zrušit rezervaci</a></p>

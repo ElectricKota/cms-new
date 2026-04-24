@@ -1,0 +1,13 @@
+{block title}Ceník{/block}
+{block content}
+<h1>Ceník</h1>
+{control priceForm}
+<table>
+    <tr><th>Kategorie</th><th>Název</th><th>Cena</th><th></th></tr>
+    <tr n:foreach="$items as $item">
+        <td>{$item->category}</td>
+        <td>{$item->title}</td>
+        <td>{$item->price}</td>
+        <td><a n:href="delete $item->id">Smazat</a></td>
+    </tr>
+</table>
