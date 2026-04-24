@@ -95,6 +95,16 @@ body {
   background: #1f2937;
 }
 
+.admin-nav-external {
+  margin-bottom: .5rem;
+  background: #0f766e;
+  color: #fff;
+}
+
+.admin-nav-external:hover {
+  background: #115e59;
+}
+
 .admin-main {
   padding: clamp(1rem, 4vw, 3rem);
 }

@@ -16,6 +16,7 @@
             <small>{implode(', ', $currentUserRoles)}</small>
         </div>
         <nav>
+            <a n:href=":Front:Homepage:default" class="admin-nav-external">Zobrazit web</a>
             <a n:foreach="$adminMenu as $link => $label" n:href="$link">{$label}</a>
             <a n:href="Sign:out">Odhlásit</a>
         </nav>
