@@ -7,9 +7,9 @@ parameters:
         - ::1
 
 database:
-    dsn: %env.DB_DSN%
-    user: %env.DB_USER%
-    password: %env.DB_PASSWORD%
+    dsn: 'mysql:host=127.0.0.1;dbname=cmd-new;charset=utf8mb4'
+    user: root
+    password: '32101'
 
 application:
     errorPresenter: Error:Error

@@ -12,3 +12,4 @@
 !/www/uploads/cache/.gitkeep
 !/www/uploads/originals/.gitkeep
 /.env.local
+/config/local.neon
